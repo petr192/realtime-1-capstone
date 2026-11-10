@@ -5,8 +5,8 @@
 показывают состояние сервисов и задержки.
 
 ```
-PostgreSQL ──CDC──> Debezium ──> Kafka ──> Обработчик ──> ClickHouse ──> FastAPI
-                                                                                      └─> Prometheus ──> Grafana
+PostgreSQL ──> Debezium ──> Kafka ──> ClickHouse ──> FastAPI
+                                                            └─> Prometheus ──> Grafana
 ```
 
 ## Стек
@@ -305,4 +305,11 @@ just topics localhost:19092 capstone 2
 
 # Прямой запрос к ClickHouse
 docker compose exec clickhouse clickhouse-client --query "SELECT count() FROM capstone.orders_current_t"
+```
+
+
+## Эксперименты 
+```
+PostgreSQL ──> ClickHouse ──> FastAPI
+                                    └─> Prometheus ──> Grafana
 ```
