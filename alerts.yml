@@ -1,0 +1,19 @@
+groups:
+  - name: capstone
+    rules:
+      - alert: ApiUnavailable
+        expr: up{job="api"} == 0
+        for: 10s
+        annotations:
+          summary: Prometheus не может собрать метрики API
+          description: Проверьте состояние API, его логи и target в Prometheus.
+      - alert: ApiErrors
+        expr: |
+          sum(rate(capstone_http_requests_total{route="/v1/datasets/{dataset_id}/metrics/summary",status=~"5.."}[30s]))
+          /
+          sum(rate(capstone_http_requests_total{route="/v1/datasets/{dataset_id}/metrics/summary"}[30s]))
+          > 0.5
+        for: 10s
+        annotations:
+          summary: Более 50% ответов summary возвращают 5xx
+          description: Проверьте доступность ClickHouse (docker compose ps clickhouse) и логи API.
